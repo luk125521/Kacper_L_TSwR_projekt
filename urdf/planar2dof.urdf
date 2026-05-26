@@ -86,8 +86,18 @@
   <link name="planar2dof/link_striker_ee">
     <inertial>
       <origin rpy="0 1.570796326790 0" xyz="0.0 0.0 0.0" />
+      <!-- zadanie 1.2
+      <mass value="0.0" />
+      <inertia ixx="0.00000" ixy="0.00000" ixz="0.00000" iyy="0.00000" iyz="0.00000" izz="0.00000" />
+      -->
+      <!-- zadanie 1.3/ 3.8-->
       <mass value="0.1" />
       <inertia ixx="0.00010" ixy="0.00000" ixz="0.00000" iyy="0.00010" iyz="0.00000" izz="0.00010" />
+
+      <!-- zadanie 3.7
+      <mass value="1.0" />
+      <inertia ixx="0.00100" ixy="0.00000" ixz="0.00000" iyy="0.00100" iyz="0.00000" izz="0.00100" />
+      -->
     </inertial>
     <visual>
       <geometry>

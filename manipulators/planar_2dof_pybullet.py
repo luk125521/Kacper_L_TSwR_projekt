@@ -3,7 +3,7 @@ import pybullet
 import pybullet_data
 from pybullet_utils.bullet_client import BulletClient
 
-
+TRUE_MODEL_HISTORY = []
 class PlanarManipulator2DOFPyBullet:
     def __init__(self, timestep, q0, qdot0, multimodel=False):
         self.client = BulletClient(connection_mode=pybullet.GUI)
@@ -25,7 +25,7 @@ class PlanarManipulator2DOFPyBullet:
         if self.multimodel:
             self.objects_params = [(0.1, 0.05), (0.01, 0.01), (1., 0.3)]
         self.i = 0
-
+        TRUE_MODEL_HISTORY.clear()
     def get_state(self):
         x = [0.] * 4
         for i in range(2):
@@ -45,6 +45,7 @@ class PlanarManipulator2DOFPyBullet:
                 I = (Ii, Ii, Ii)
                 self.change_dynamics(3, m, I)
         print("OBJ_IDX:", self.i)
+        TRUE_MODEL_HISTORY.append(self.i)
         self.client.stepSimulation()
 
     def change_dynamics(self, idx, m, I):

@@ -3,6 +3,7 @@ import numpy as np
 from numpy import pi
 from scipy.integrate import odeint
 
+from manipulators.planar_2dof_pybullet import TRUE_MODEL_HISTORY
 from controllers.dummy_controller import DummyController
 from controllers.feedback_linearization_controller import FeedbackLinearizationController
 from controllers.mma_controller import MMAController
@@ -14,20 +15,20 @@ from utils.simulation import simulate
 """http://www.gipsa-lab.fr/~ioandore.landau/adaptivecontrol/Transparents/Courses/AdaptiveCourse5GRK.pdf"""
 
 Tp = 0.01
-end = 3.
+end = 15.
 
 
 # TODO: Switch to MMAC as soon as you implement it
-#controller = MMAController(Tp)
-controller = FeedbackLinearizationController(Tp)
-controller = DummyController(Tp)
+controller = MMAController(Tp)
+#controller = FeedbackLinearizationController(Tp)
+#controller = DummyController(Tp)
 
 """
 Here you have some trajectory generators. You can use them to check your implementations.
 """
 # traj_gen = ConstantTorque(np.array([0., 1.0])[:, np.newaxis])
-traj_gen = Sinusoidal(np.array([0., 1.]), np.array([2., 2.]), np.array([0., 0.]))
-#traj_gen = Poly3(np.array([0., 0.]), np.array([pi/4, pi/6]), end)
+#traj_gen = Sinusoidal(np.array([0., 1.]), np.array([2., 2.]), np.array([0., 0.]))
+traj_gen = Poly3(np.array([0., 0.]), np.array([pi/4, pi/6]), end)
 
 
 Q, Q_d, u, T = simulate("PYBULLET", traj_gen, controller, Tp, end, multimodel=True)
@@ -44,4 +45,19 @@ plt.subplot(223)
 plt.plot(T, u[:, 0], 'r', label="u_1")
 plt.plot(T, u[:, 1], 'b', label="u_2")
 plt.legend()
+
+selected_model_history = np.array(controller.selected_model_history)
+true_model_history = np.array(TRUE_MODEL_HISTORY)
+
+n = min(len(T), len(selected_model_history), len(true_model_history))
+
+plt.figure()
+plt.step(T[:n], selected_model_history[:n], where="post", label="Model wybrany przez MMAC")
+plt.step(T[:n], true_model_history[:n], where="post", linestyle="--", label="Model rzeczywisty")
+
+plt.xlabel("Czas [s]")
+plt.ylabel("Numer modelu")
+plt.yticks([0, 1, 2])
+plt.grid()
+plt.tight_layout()
 plt.show()
